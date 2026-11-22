@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05090d">
+  <title>Recharge Free Fire | MADARA TOP UP</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      background: #05090d;
+      color: #f5faff;
+      font-family: Arial, sans-serif;
+    }
+
+    .recharge-page {
+      width: min(92%, 650px);
+      margin: 35px auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      color: #00e5ff;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    a {
+      color: #00e5ff;
+      text-decoration: none;
+    }
+
+    .panel {
+      background: #101820;
+      border: 1px solid #243744;
+      border-radius: 17px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 27px;
+      margin: 0 0 8px;
+    }
+
+    .muted {
+      color: #9eabb5;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 17px 0 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #344955;
+      background: #071017;
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus, select:focus {
+      border-color: #00e5ff;
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 13px;
+    }
+
+    .pack {
+      background: #09131b;
+      color: white;
+      border: 1px solid #344955;
+      padding: 16px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .pack strong {
+      display: block;
+      color: #00e5ff;
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .pack.selected {
+      border: 2px solid #00e5ff;
+      background: #102b35;
+    }
+
+    .pack small {
+      color: #9eabb5;
+    }
+
+    .main-button {
+      width: 100%;
+      padding: 16px;
+      background: #00d9ee;
+      color: #001116;
+      border: none;
+      border-radius: 11px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 9px;
+      background: #192b35;
+      color: #bcefff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #293943;
+    }
+
+    .summary:last-child {
+      border-bottom: none;
+    }
+
+    @media(max-width: 380px) {
+      .packages {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="recharge-page">
+
+    <header class="topbar">
+      <div class="logo">MADARA TOP UP</div>
+      <a href="dashboard.html">← Retour</a>
+    </header>
+
+    <section class="panel">
+      <h1>Recharge Free Fire</h1>
+      <p class="muted">
+        Choisis ton pays, renseigne ton identifiant joueur
+        et sélectionne ton offre.
+      </p>
+
+      <label for="country">Pays</label>
+      <select id="country" required>
+        <option value="">Choisir un pays</option>
+      </select>
+
+      <label for="playerId">ID joueur Free Fire</label>
+      <input
+        id="playerId"
+        type="text"
+        inputmode="numeric"
+        maxlength="30"
+        placeholder="Entre ton ID joueur"
+        autocomplete="off"
+      >
+
+      <button class="main-button" id="verifyButton" type="button">
+        Vérifier mon ID
+      </button>
+
+      <div class="message" id="playerMessage" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Choisir une offre</h2>
+
+      <p class="muted">
+        Les tarifs et quantités définitifs seront configurés
+        après validation du fournisseur.
+      </p>
+
+      <div class="packages" id="packages">
+
+        <button class="pack" data-name="Petit pack">
+          <strong>Petit pack</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+        <button class="pack" data-name="Pack moyen">
+          <strong>Pack moyen</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+        <button class="pack" data-name="Grand pack">
+          <strong>Grand pack</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+        <button class="pack" data-name="Pack premium">
+          <strong>Pack premium</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+        <button class="pack" data-name="Abonnement hebdomadaire">
+          <strong>Hebdomadaire</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+        <button class="pack" data-name="Abonnement mensuel">
+          <strong>Mensuel</strong>
+          <small>Prix à confirmer</small>
+        </button>
+
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Récapitulatif</h2>
+
+      <div class="summary">
+        <span>Pays</span>
+        <strong id="summaryCountry">Non choisi</strong>
+      </div>
+
+      <div class="summary">
+        <span>ID joueur</span>
+        <strong id="summaryId">Non renseigné</strong>
+      </div>
+
+      <div class="summary">
+        <span>Offre</span>
+        <strong id="summaryPack">Non choisie</strong>
+      </div>
+
+      <div class="summary">
+        <span>Pseudo vérifié</span>
+        <strong id="summaryNickname">En attente</strong>
+      </div>
+
+      <button class="main-button" id="orderButton" type="button">
+        Continuer
+      </button>
+
+      <div class="message" id="orderMessage" aria-live="polite"></div>
+    </section>
+
+    <p class="muted" style="text-align:center">
+      MADARA TOP UP AFRICA · Service de recharge
+    </p>
+
+  </main>
+
+  <script>
+    const countries = [
+      "Afrique du Sud", "Algérie", "Angola", "Bénin",
+      "Botswana", "Burkina Faso", "Burundi", "Cabo Verde",
+      "Cameroun", "Comores", "Congo", "Côte d'Ivoire",
+      "Djibouti", "Égypte", "Érythrée", "Eswatini",
+      "Éthiopie", "Gabon", "Gambie", "Ghana",
+      "Guinée", "Guinée-Bissau", "Guinée équatoriale",
+      "Kenya", "Lesotho", "Liberia", "Libye",
+      "Madagascar", "Malawi", "Mali", "Maroc",
+      "Maurice", "Mauritanie", "Mozambique", "Namibie",
+      "Niger", "Nigeria", "Ouganda", "République centrafricaine",
+      "République démocratique du Congo", "Rwanda",
+      "Sao Tomé-et-Principe", "Sénégal", "Seychelles",
+      "Sierra Leone", "Somalie", "Soudan", "Soudan du Sud",
+      "Tanzanie", "Tchad", "Togo", "Tunisie",
+      "Zambie", "Zimbabwe"
+    ];
+
+    const countrySelect = document.getElementById("country");
+    const playerId = document.getElementById("playerId");
+    const playerMessage = document.getElementById("playerMessage");
+    const orderMessage = document.getElementById("orderMessage");
+
+    let selectedPack = "";
+    let verifiedPlayer = false;
+
+    countries.forEach(country => {
+      const option = document.createElement("option");
+      option.value = country;
+      option.textContent = country;
+      countrySelect.appendChild(option);
+    });
+
+    countrySelect.value = localStorage.getItem("madara_country") || "";
+
+    countrySelect.addEventListener("change", () => {
+      localStorage.setItem("madara_country", countrySelect.value);
+      document.getElementById("summaryCountry").textContent =
+        countrySelect.value || "Non choisi";
+    });
+
+    playerId.addEventListener("input", () => {
+      verifiedPlayer = false;
+      document.getElementById("summaryId").textContent =
+        playerId.value || "Non renseigné";
+      document.getElementById("summaryNickname").textContent =
+        "En attente";
+      playerMessage.style.display = "none";
+    });
+
+    document.querySelectorAll(".pack").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".pack").forEach(pack => {
+          pack.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
+        selectedPack = button.dataset.name;
+        document.getElementById("summaryPack").textContent = selectedPack;
+        orderMessage.style.display = "none";
+      });
+    });
+
+    document.getElementById("verifyButton").addEventListener("click", async () => {
+      const id = playerId.value.trim();
+
+      if (!/^[0-9]{5,30}$/.test(id)) {
+        playerMessage.textContent = "Entre un ID joueur valide.";
+        playerMessage.style.display = "block";
+        return;
+      }
+
+      playerMessage.textContent =
+        "La vérification réelle du pseudo sera activée après connexion à un fournisseur autorisé. Aucun pseudo n'a encore été vérifié.";
+      playerMessage.style.display = "block";
+    });
+
+    document.getElementById("orderButton").addEventListener("click", () => {
+      if (!countrySelect.value) {
+        showOrderMessage("Choisis ton pays.");
+        return;
+      }
+
+      if (!/^[0-9]{5,30}$/.test(playerId.value.trim())) {
+        showOrderMessage("Entre un ID joueur valide.");
+        return;
+      }
+
+      if (!selectedPack) {
+        showOrderMessage("Choisis une offre.");
+        return;
+      }
+
+      showOrderMessage(
+        "Récapitulatif prêt. Les commandes et paiements réels seront activés après installation du backend, du fournisseur de recharge et du prestataire de paiement."
+      );
+    });
+
+    function showOrderMessage(message) {
+      orderMessage.textContent = message;
+      orderMessage.style.display = "block";
+    }
+
+    document.getElementById("summaryCountry").textContent =
+      countrySelect.value || "Non choisi";
+  </script>
+</body>
+</html>
