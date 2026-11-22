@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05090d">
+  <title>Administration | MADARA TOP UP</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #05090d;
+      color: #f5faff;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 20px;
+      border-bottom: 1px solid #263944;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      color: #00e5ff;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    a { color: #00e5ff; text-decoration: none; }
+
+    main {
+      width: min(1100px, 94%);
+      margin: 30px auto;
+    }
+
+    h1 { font-size: 27px; }
+
+    .muted {
+      color: #9eabb5;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      padding: 15px;
+      background: #332711;
+      border: 1px solid #806126;
+      border-radius: 12px;
+      color: #ffe2a0;
+      margin: 20px 0;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .card, .section {
+      background: #101820;
+      border: 1px solid #263944;
+      border-radius: 14px;
+      padding: 19px;
+    }
+
+    .card span {
+      color: #9eabb5;
+      font-size: 13px;
+    }
+
+    .card strong {
+      display: block;
+      color: #00e5ff;
+      font-size: 24px;
+      margin-top: 12px;
+    }
+
+    .section { margin-top: 20px; }
+
+    .section h2 { font-size: 19px; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 13px 10px;
+      border-bottom: 1px solid #263944;
+    }
+
+    th { color: #00e5ff; }
+
+    .status {
+      color: #ffd27a;
+      font-weight: bold;
+    }
+
+    button {
+      background: #00d9ee;
+      color: #001116;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 14px;
+      color: #bcefff;
+      font-size: 14px;
+    }
+
+    @media(max-width: 700px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 380px) {
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">MADARA TOP UP</div>
+    <a href="index.html">Retour au site</a>
+  </header>
+
+  <main>
+    <h1>Administration</h1>
+    <p class="muted">Gestion des commandes et suivi de l'activité.</p>
+
+    <div class="notice">
+      <strong>Accès protégé requis.</strong>
+      Cette page est une interface de préparation.
+      Les données réelles ne seront accessibles qu'après
+      connexion administrateur vérifiée par le serveur.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <span>Commandes</span>
+        <strong id="totalOrders">—</strong>
+      </div>
+
+      <div class="card">
+        <span>Paiements confirmés</span>
+        <strong id="paidOrders">—</strong>
+      </div>
+
+      <div class="card">
+        <span>Recharges terminées</span>
+        <strong id="completedOrders">—</strong>
+      </div>
+
+      <div class="card">
+        <span>Bénéfice net</span>
+        <strong id="netProfit">—</strong>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Commandes récentes</h2>
+      <p class="muted">
+        Les informations seront chargées depuis le backend sécurisé.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Commande</th>
+              <th>Pays</th>
+              <th>Offre</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTable">
+            <tr>
+              <td colspan="4">Aucune donnée chargée.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button id="refreshButton" type="button">
+        Actualiser
+      </button>
+
+      <div id="message" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+    const refreshButton = document.getElementById("refreshButton");
+    const message = document.getElementById("message");
+
+    async function loadAdminData() {
+      refreshButton.disabled = true;
+      message.textContent = "Vérification de l'accès administrateur...";
+
+      try {
+        const response = await fetch("/api/admin/dashboard", {
+          method: "GET",
+          credentials: "include",
+          headers: { "Accept": "application/json" }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          throw new Error("Accès administrateur refusé. Connexion requise.");
+        }
+
+        if (!response.ok) {
+          throw new Error("Le service administrateur n'est pas encore connecté.");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("totalOrders").textContent =
+          data.totalOrders ?? "—";
+
+        document.getElementById("paidOrders").textContent =
+          data.paidOrders ?? "—";
+
+        document.getElementById("completedOrders").textContent =
+          data.completedOrders ?? "—";
+
+        document.getElementById("netProfit").textContent =
+          data.netProfitFormatted ?? "—";
+
+        const table = document.getElementById("ordersTable");
+        table.replaceChildren();
+
+        if (!Array.isArray(data.orders) || data.orders.length === 0) {
+          const row = table.insertRow();
+          const cell = row.insertCell();
+          cell.colSpan = 4;
+          cell.textContent = "Aucune commande.";
+        } else {
+          data.orders.forEach(order => {
+            const row = table.insertRow();
+
+            [
+              order.id,
+              order.country,
+              order.packageName,
+              order.status
+            ].forEach(value => {
+              const cell = row.insertCell();
+              cell.textContent = String(value ?? "—");
+            });
+          });
+        }
+
+        message.textContent = "Données actualisées.";
+
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        refreshButton.disabled = false;
+      }
+    }
+
+    refreshButton.addEventListener("click", loadAdminData);
+  </script>
+</body>
+</html>
