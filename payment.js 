@@ -1,0 +1,73 @@
+
+/*
+ * MADARA TOP UP
+ * Préparation du système de paiement.
+ *
+ * Aucun paiement réel n'est déclenché ici.
+ * La confirmation devra venir du backend et du prestataire.
+ */
+
+const MadaraPayment = (() => {
+  const providers = {
+    "Côte d'Ivoire": [
+      "Wave",
+      "Orange Money",
+      "MTN MoMo",
+      "Moov Money"
+    ],
+    "Sénégal": ["Wave", "Orange Money", "Free Money"],
+    "Mali": ["Orange Money", "Moov Money"],
+    "Burkina Faso": ["Orange Money", "Moov Money"],
+    "Bénin": ["MTN MoMo", "Moov Money"],
+    "Togo": ["TMoney", "Moov Money"],
+    "Ghana": ["MTN MoMo", "Telecel Cash", "AirtelTigo Money"],
+    "Nigeria": ["Virement bancaire", "Carte bancaire"],
+    "Kenya": ["M-Pesa", "Carte bancaire"],
+    "Cameroun": ["MTN MoMo", "Orange Money"],
+    "Guinée": ["Orange Money", "MTN MoMo"],
+    "Gabon": ["Airtel Money", "Moov Money"],
+    "Niger": ["Airtel Money", "Moov Money"],
+    "Rwanda": ["MTN MoMo", "Airtel Money"],
+    "Ouganda": ["MTN MoMo", "Airtel Money"],
+    "Tanzanie": ["M-Pesa", "Airtel Money"],
+    "Zambie": ["MTN MoMo", "Airtel Money"],
+    "Afrique du Sud": ["Carte bancaire", "Virement bancaire"]
+  };
+
+  function getMethods(country) {
+    return providers[country] || [];
+  }
+
+  function getAvailableCountries() {
+    return Object.keys(providers);
+  }
+
+  function preparePayment(order) {
+    if (!order || !order.country || !order.method ||
+        !order.orderId) {
+      throw new Error("Informations de commande incomplètes.");
+    }
+
+    const methods = getMethods(order.country);
+
+    if (!methods.includes(order.method)) {
+      throw new Error("Moyen de paiement non répertorié pour ce pays.");
+    }
+
+    return {
+      orderId: order.orderId,
+      country: order.country,
+      method: order.method,
+      status: "awaiting_backend",
+      message: "Le paiement doit être créé par le backend sécurisé."
+    };
+  }
+
+  return {
+    getMethods,
+    getAvailableCountries,
+    preparePayment
+  };
+})();
+
+window.MadaraPayment = MadaraPayment;
